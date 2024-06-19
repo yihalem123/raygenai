@@ -1,0 +1,1919 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+
+<head>
+
+        <meta charset="utf-8" />
+        <title>Dashboard | Portfolio Management System</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta content="Premium Multipurpose Admin & Dashboard Template" name="description" />
+        <meta content="Themesbrand" name="author" />
+        <!-- App favicon -->
+        <link rel="shortcut icon" href="{% static 'dashboard/images/favicon.ico' %}">
+
+        <!-- Bootstrap Css -->
+        <link href="{% static 'dashboard/css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+        <!-- Icons Css -->
+        <link href="{% static 'dashboard/css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+        <!-- App Css-->
+        <link href="{% static 'dashboard/css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.5.1/chart.min.js"></script>
+        <script src="https://www.chartjs.org/dist/2.9.4/Chart.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+        <style>
+            .tabcontent {
+                display: none;
+                padding: 6px 12px;
+                border: 1px solid #ccc;
+                border-top: none;
+            }
+            .tabcontent {
+                animation: fadeEffect 1s; /* Fading effect takes 1 second */
+            }
+            /* Go from zero to full opacity */
+            @keyframes fadeEffect {
+                from {opacity: 0;}
+                to {opacity: 1;}
+            }
+         
+        /* Spinner CSS */
+        @keyframes sk-rotateplane {
+            0% { transform: perspective(120px) rotateX(0deg) rotateY(0deg); }
+            50% { transform: perspective(120px) rotateX(-180.1deg) rotateY(0deg); }
+            100% { transform: perspective(120px) rotateX(-180deg) rotateY(-179.9deg); }
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            background-color: #1971e4;
+            margin: 100px auto;
+            animation: sk-rotateplane 1.2s infinite ease-in-out;
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .card-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        .card-body {
+            padding: 1.5rem;
+        }
+        .card-body p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        .card-body a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .card-body a:hover {
+            text-decoration: underline;
+        }
+        .page-title-box {
+            padding: 10px 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .breadcrumb {
+            background-color: transparent;
+            font-size: 0.9rem;
+            padding: 0;
+            margin-bottom: 0;
+        }
+        .breadcrumb-item {
+            padding: 0;
+        }
+        .breadcrumb-item + .breadcrumb-item::before {
+            content: "\00a0/\00a0";
+        }
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            display: none;
+            z-index: 9999;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin: -15px 0 0 -15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Media query for responsiveness */
+        @media (max-width: 768px) {
+            .card {
+                margin-bottom: 15px;
+            }
+            .card-body {
+                padding: 1rem;
+            }
+        }
+            .table {
+            width: 100%;
+            margin-bottom: 0; /* Remove default margin-bottom */
+        }
+
+        .table th, .table td {
+            vertical-align: middle; /* Align content vertically */
+        }
+        </style>
+
+    </head>
+
+    <!-- <body> -->
+    <body data-layout="horizontal" data-topbar="colored">
+
+        <!-- Begin page -->
+        <div id="layout-wrapper">
+=            <header id="page-topbar">
+                <div class="navbar-header">
+                    <div class="d-flex">
+                        <!-- LOGO -->
+                        <div class="navbar-brand-box">
+                            <a href="{% url 'home' %}" class="logo logo-light">
+                                <span class="logo-sm">
+                                    {% comment %} <img src="{% static 'dashboard/images/logo-sm.png' %}" alt="" height="30"> {% endcomment %}
+                                    <h2 style="color: white;">Logo Placeholder</h2>
+                                </span>
+                                <span class="logo-lg">
+                                    <h2 style="color: white;">Logo Placeholder</h2>
+                                    {% comment %} <img src="{% static 'dashboard/images/logo-light.png' %}" alt="" height="30"> {% endcomment %}
+                                </span>
+                            </a>
+                        </div>
+
+                        <button type="button" class="btn btn-sm px-3 font-size-16 d-lg-none header-item waves-effect waves-light" data-toggle="collapse" data-target="#topnav-menu-content">
+                            <i class="fa fa-fw fa-bars"></i>
+                        </button>
+
+                    </div>
+
+                    <div class="d-flex">
+                        <div class="dropdown d-inline-block d-lg-none ml-2">
+                            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-search-dropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="uil-search"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"
+                                aria-labelledby="page-header-search-dropdown">
+                    
+                                <form class="p-3">
+                                    <div class="form-group m-0">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" placeholder="Search ..." aria-label="Recipient's username">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary" type="submit"><i class="mdi mdi-magnify"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+                        <div class="dropdown d-none d-lg-inline-block ml-1">
+                            <button type="button" class="btn header-item noti-icon waves-effect" data-toggle="fullscreen">
+                                <i class="uil-minus-path"></i>
+                            </button>
+                        </div>
+
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item noti-icon waves-effect" id="page-header-notifications-dropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="uil-bell"></i>
+                                <span class="badge badge-danger badge-pill"></span>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-lg dropdown-menu-right p-0"
+                                aria-labelledby="page-header-notifications-dropdown">
+                                <div class="p-3">
+                                    <div class="row align-items-center">
+                                        <div class="col">
+                                            <h5 class="m-0 font-size-16"> Notifications </h5>
+                                        </div>
+                                        <div class="col-auto">
+                                            <a href="#!" class="small"> Mark all as read</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div data-simplebar style="max-height: 230px;">
+                                    <a href="#" class="text-reset notification-item">
+                                        <div class="media">
+                                            <div class="avatar-xs mr-3">
+                                                <span class="avatar-title bg-primary rounded-circle font-size-16">
+                                                    <i class="uil-shopping-basket"></i>
+                                                </span>
+                                            </div>
+                                            <div class="media-body">
+                                                <h6 class="mt-0 mb-1">Your order is placed</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">If several languages coalesce the grammar</p>
+                                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="text-reset notification-item">
+                                        <div class="media">
+                                            <img src="{% static 'dashboard/images/users/avatar-3.jpg' %}"
+                                                class="mr-3 rounded-circle avatar-xs" alt="user-pic">
+                                            <div class="media-body">
+                                                <h6 class="mt-0 mb-1">James Lemire</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">It will seem like simplified English.</p>
+                                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <a href="#" class="text-reset notification-item">
+                                        <div class="media">
+                                            <div class="avatar-xs mr-3">
+                                                <span class="avatar-title bg-success rounded-circle font-size-16">
+                                                    <i class="uil-truck"></i>
+                                                </span>
+                                            </div>
+                                            <div class="media-body">
+                                                <h6 class="mt-0 mb-1">Your item is shipped</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">If several languages coalesce the grammar</p>
+                                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 3 min ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                    <a href="#" class="text-reset notification-item">
+                                        <div class="media">
+                                            <img src="{% static 'dashboard/images/users/avatar-4.jpg' %}"
+                                                class="mr-3 rounded-circle avatar-xs" alt="user-pic">
+                                            <div class="media-body">
+                                                <h6 class="mt-0 mb-1">Salena Layfield</h6>
+                                                <div class="font-size-12 text-muted">
+                                                    <p class="mb-1">As a skeptical Cambridge friend of mine occidental.</p>
+                                                    <p class="mb-0"><i class="mdi mdi-clock-outline"></i> 1 hours ago</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="p-2 border-top">
+                                    <a class="btn btn-sm btn-link font-size-14 btn-block text-center" href="javascript:void(0)">
+                                        <i class="uil-arrow-circle-right mr-1"></i> View More..
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="dropdown d-inline-block">
+                            <button type="button" class="btn header-item waves-effect" id="page-header-user-dropdown"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="rounded-circle header-profile-user" src="{% static 'dashboard/images/users/avatar-4.jpg' %}"
+                                    alt="Header Avatar">
+                                <span class="d-none d-xl-inline-block ml-1 font-weight-medium font-size-18">{{ user.username }}</span>
+                                <i class="uil-angle-down d-none d-xl-inline-block font-size-18"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <!-- item-->
+                                <a class="dropdown-item" href="#"><i class="uil uil-user-circle font-size-18 align-middle text-muted mr-1"></i> <span class="align-middle">View Profile</span></a>
+                                {% comment %} <a class="dropdown-item" href="#"><i class="uil uil-wallet font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">My Wallet</span></a> {% endcomment %}
+                                {% comment %} <a class="dropdown-item d-block" href="#"><i class="uil uil-cog font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">Settings</span> <span class="badge badge-soft-success badge-pill mt-1 ml-2">03</span></a> {% endcomment %}
+                                {% comment %} <a class="dropdown-item" href="#"><i class="uil uil-lock-alt font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">Lock screen</span></a> {% endcomment %}
+                                <a class="dropdown-item" href="{% url 'account_logout' %}"><i class="uil uil-sign-out-alt font-size-18 align-middle mr-1 text-muted"></i> <span class="align-middle">Sign out</span></a>
+                            </div>
+                        </div>
+            
+                    </div>
+                </div>
+                <div class="container-fluid">
+                    <div class="topnav">
+                        <nav class="navbar navbar-light navbar-expand-lg topnav-menu">    
+                            <div class="collapse navbar-collapse" id="topnav-menu-content">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link" onclick="openTab(event, 'investment-overview')" id="defaultOpen">
+                                            <i class="uil-dollar-alt mr-2"></i> Investment Overview
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" onclick="openTab(event, 'portfolio-insights')">
+                                            <i class="uil-briefcase-alt mr-2"></i> Portfolio Insights
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" onclick="openTab(event, 'recommendations')">
+                                            <i class="uil-thumbs-up mr-2"></i> Recommendations
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" onclick="openTab(event, 'news')">
+                                            <i class="uil-newspaper mr-2"></i> News
+                                        </a>
+                                    </li>
+
+                                    <li class="nav-item">
+                                        <a class="nav-link" onclick="openTab(event, 'prediction')">
+                                            <i class="uil-cog mr-2"></i> Stock Prediction
+                                        </a>
+                                    </li>
+     
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+                </div>
+            </header>
+    
+            <!-- Investment Overview -->
+            <div id="investment-overview" class="tabcontent">
+                <div class="main-content">
+                    <div class="page-content">
+                        <div class="container-fluid">
+                            <!-- start page title -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                                        <h4 class="mb-0">Dashboard</h4>
+
+                                        <div class="page-title-right">
+                                            <ol class="breadcrumb m-0">
+                                                <li class="breadcrumb-item"><a href="javascript: void(0);">Minible</a></li>
+                                                <li class="breadcrumb-item">Dashboard</li>
+                                                <li class="breadcrumb-item active">Investment Overview</li>
+                                            </ol>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end page title -->
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="tradingview-widget-container">
+                                        <div class="tradingview-widget-container__widget"></div>
+                                        <div class="tradingview-widget-copyright"></div>                                       
+                                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+                                            {
+                                                "symbols": [
+                                                    {
+                                                        "proName": "FOREXCOM:SPXUSD",
+                                                        "title": "S&P 500"
+                                                    },
+                                                    {
+                                                        "proName": "FOREXCOM:NSXUSD",
+                                                        "title": "Nasdaq 100"
+                                                    },
+                                                    {
+                                                        "proName": "FX_IDC:EURUSD",
+                                                        "title": "EUR/USD"
+                                                    },
+                                                    {
+                                                        "proName": "BITSTAMP:BTCUSD",
+                                                        "title": "BTC/USD"
+                                                    },
+                                                    {
+                                                        "proName": "BITSTAMP:ETHUSD",
+                                                        "title": "ETH/USD"
+                                                    }
+                                                ],
+                                                "colorTheme": "light",
+                                                "isTransparent": false,
+                                                "showSymbolLogo": true,
+                                                "locale": "in"
+                                            }
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-right mt-2">
+                                                <div id="total-investment-chart"></div>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-1 mt-1">$ <span data-plugin="counterup">{{ totalInvestment | floatformat:2 }}</span></h4>
+                                                <p class="text-muted mb-0">Total Investment</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- end col-->
+
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-right mt-2">
+                                                <div id="current-value-chart"></div>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-1 mt-1" id="current-value">$ <span data-plugin="counterup">Current Value</span></h4>
+                                                <p class="text-muted mb-0">Current Value</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- end col-->
+
+                                <div class="col-md-6 col-xl-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-right mt-2">
+                                                <div id="pnl-chart"></div>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-1 mt-1" style="color:#34c38f;" id="unrealized-pnl"><span data-plugin="counterup">Unrealized P&L</span></h4>
+                                                <p class="text-muted mb-0">Unrealized P&L</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- end col-->
+
+                                <div class="col-md-6 col-xl-3">
+
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-right mt-2">
+                                                <div id="growth-chart"></div>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-1 mt-1" style="color:#34c38f;" id="growth"><span data-plugin="counterup">Growth</span> %</h4>
+                                                <p class="text-muted mb-0">Growth</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div> <!-- end col-->
+                            </div> <!-- end row-->
+
+                            <div class="row">
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="card">
+                                        <div id="donut-chart">
+                                            <canvas id="account-chart-container" style="display: block; height: 300px; padding: 20px;" class="chartjs-render-monitor"></canvas>
+                                            <div class="font-weight-bold text-center mb-4" style="font-size: 16px; z-index: 1001">Account</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="card">
+                                        <div id="donut-chart">
+                                            <canvas id="sector-chart-container" style="display: block; height: 300px; padding: 20px;" class="chartjs-render-monitor"></canvas>
+                                            <div class="font-weight-bold text-center mb-4" style="font-size: 16px; z-index: 1001">Sectors</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-12">
+                                    <div class="card">
+                                        <div id="donut-chart">
+                                            <canvas id="stock-chart-container" style="display: block; height: 300px; padding: 20px;" class="chartjs-render-monitor"></canvas>
+                                            <div class="font-weight-bold text-center mb-4" style="font-size: 16px; z-index: 1001">Stocks</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> <!-- end row-->
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title mb-4">Your Holdings
+                                            <button 
+                                                style="float: right; margin-bottom: 10px; background-color: #50a5f1; border-color: #50a5f1;" 
+                                                type="button" class="btn btn-primary btn-sm-12 btn-md-6 btn-rounded waves-effect waves-light"
+                                                data-toggle="modal" data-target="#myModal">
+                                                <i class="fa fa-plus"></i> &nbsp;Add Stock Holding
+                                            </button></h4>
+
+                                            <!-- Modal -->
+                                            <div id="myModal" class="modal fade" role="dialog">
+                                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Add Stock to your Portfolio</h4>
+                                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <form id="add-holding-form" method="post" action="{% url 'add-holding' %}">
+                                                                {% csrf_token %}
+                                                                <div class="form-group row mb-4">
+                                                                    <label for="horizontal-firstname-input" class="col-sm-3 col-form-label">Stock Ticker :</label>
+                                                                    <div class="col-sm-9">
+                                                                        <select id="company" class="js-example-basic-single" style="width: 100%;">
+                                                                            <!-- Options will be dynamically loaded here -->
+                                                                          </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label for="example-date-input" class="col-sm-3 col-form-label">Date</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input name="date" class="form-control" type="date" value="" id="example-date-input" max="">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group row mb-4">
+                                                                    <label for="example-date-input" class="col-sm-3 col-form-label">Number of Stocks</label>
+                                                                    <div class="col-sm-9">
+                                                                        <input name="number-stocks" class="form-control" type="number" value="0" min="0" step="1" id="number-stocks">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row mt-4 justify-content-center">
+                                                                    <button type="submit" class="btn btn-primary w-md">Submit</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap mb-0" id="portfolio-table">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th class="text-center">Company Name</th>
+                                                            <th class="text-center">Number of Shares</th>
+                                                            <th class="text-center">Average Cost</th>
+                                                            <th class="text-center">Last Trading Price (LTP)</th>
+                                                            <th class="text-center">Invested Amount</th>
+                                                            <th class="text-center" class="font-weight-bold">P&L</th>
+                                                            <th class="text-center">Net Change</th>
+                                                            <th class="text-center">Details</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for c in holdings %}
+                                                        <tr id="{{ c.CompanySymbol }}">
+                                                            <td class="text-body font-weight-bold">
+                                                                <div class="tradingview-widget-container">
+                                                                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-single-quote.js" async>
+                                                                        {
+                                                                            "symbol": "NASDAQ:{{c.CompanySymbol}}",
+                                                                            "width": 350,
+                                                                            "colorTheme": "light",
+                                                                            "isTransparent": true,
+                                                                            "locale": "in"
+                                                                        }
+                                                                    </script>
+                                                                </div>
+                                                            </td>
+                                                            <td class="text-center font-weight-bold" style="font-size: 20px;">{{ c.NumberShares }}</td>
+                                                            <td class="text-center font-weight-bold" style="font-size: 20px;">$ {{ c.AverageCost | floatformat:2 }}</td>
+                                                            <td class="text-center font-weight-bold" style="font-size: 20px;">LTP</td>
+                                                            <td class="text-center font-weight-bold" style="font-size: 20px;">$ {{ c.InvestmentAmount | floatformat:2 }}</td>
+                                                            <td class="text-center font-weight-bold" style="font-size: 20px;">PNL</td>
+                                                            <td class="text-center font-weight-bold" style="font-size: 20px;">Net Change</td>
+                                                            <td class="text-center">
+                                                                <button 
+                                                                    type="button" class="btn btn-primary btn-md btn-rounded waves-effect waves-light"
+                                                                    data-toggle="modal" data-target="#stockdetails-{{ c.CompanySymbol }}" onclick="getFinancials('{{ c.CompanySymbol }}')">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- end table-responsive -->
+
+                                            {% for c in holdings %}
+                                                <!-- Modal -->
+                                                <div id="stockdetails-{{ c.CompanySymbol }}" class="modal fade" role="dialog">
+                                                    <div class="modal-dialog modal-dialog-centered modal-xl">
+                                                        <!-- Modal content-->
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">{{ c.CompanyName }} ({{ c.CompanySymbol }})</h4>
+                                                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="col-12 justify-content-center">
+                                                                    <div class="tradingview-widget-container">
+                                                                        <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-symbol-info.js" async>
+                                                                        {
+                                                                            "symbol": "NASDAQ:{{ c.CompanySymbol }}",
+                                                                            "width": "100%",
+                                                                            "locale": "in",
+                                                                            "colorTheme": "light",
+                                                                            "isTransparent": false
+                                                                        }
+                                                                        </script>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12 justify-content-center">
+                                                                    <div class="tradingview-widget-container">
+                                                                        <div id="tradingview_{{ c.CompanySymbol }}"></div>
+                                                                        <div class="tradingview-widget-copyright">&nbsp;</div>
+                                                                        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                                                                        <script type="text/javascript">
+                                                                            new TradingView.widget(
+                                                                                {
+                                                                                    "width": "100%",
+                                                                                    "height": 610,
+                                                                                    "symbol": "NASDAQ:{{ c.CompanySymbol }}",
+                                                                                    "interval": "D",
+                                                                                    "timezone": "Etc/UTC",
+                                                                                    "theme": "light",
+                                                                                    "style": "1",
+                                                                                    "locale": "in",
+                                                                                    "toolbar_bg": "#f1f3f6",
+                                                                                    "enable_publishing": false,
+                                                                                    "withdateranges": true,
+                                                                                    "container_id": "tradingview_{{ c.CompanySymbol }}"
+                                                                                }
+                                                                            );
+                                                                        </script>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" id="financials-{{ c.CompanySymbol }}">
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div> <!-- container-fluid -->
+                    </div>
+                    <!-- End Page-content -->
+
+
+                    <footer class="footer">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <script>document.write(new Date().getFullYear())</script> © All Rights Reserved
+                                </div>
+                                <div class="col-sm-6">
+                                    <div class="text-sm-right d-none d-sm-block">
+                                        Crafted with <i class="fas fa-heart"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </div>
+                <!-- end main content-->
+            </div>
+
+            <!-- Portfolio Insights -->
+            <div id="portfolio-insights" class="container-fluid tabcontent">
+                <div class="main-content">
+                    <div class="page-content">
+                        <div class="container">
+                            <!-- start page title -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                                        <h4 class="mb-0">Dashboard</h4>
+                                        <div class="page-title-right">
+                                            <ol class="breadcrumb m-0">
+                                                <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                                                <li class="breadcrumb-item">Dashboard</li>
+                                                <li class="breadcrumb-item active">Portfolio Insights</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end page title -->
+            
+                            <!-- User Status Section -->
+                            <div class="row justify-content-center mb-4">
+                                <div class="col-lg-8">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">User Status</h5>
+                                            <ul class="list-unstyled">
+                                                <li><strong>Risk Profile:</strong> <span id="user-risk-profile">Loading...</span></li>
+                                                <li><strong>Current Stock Holdings:</strong> <span id="current-stock-holdings"></span></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <!-- Portfolio Metrics Section -->
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-right mt-2">
+                                                <div id="total-investment-chart"></div>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-1 mt-1">Beta (β) : <span id="portfolio-beta">Beta</span></h4>
+                                                <p class="text-muted" id="portfolio-beta-text">Your portfolio moves by a factor of 0 in the direction of market swing</p>
+                                                <p class="mb-0"><a href="#" style="padding-top: 20px;">See Calculations &nbsp;<i class="fas fa-long-arrow-alt-right"></i></a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+            
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="float-right mt-2">
+                                                <div id="total-investment-chart"></div>
+                                            </div>
+                                            <div>
+                                                <h4 class="mb-1 mt-1">PE Ratio : <span id="portfolio-pe">PE</span></h4>
+                                                <p class="text-muted">This is a holdings-weighted consolidated PE Ratio of all the stocks held in your portfolio</p>
+                                                <p class="mb-0"><a href="#" style="padding-top: 20px;">See Calculations &nbsp;<i class="fas fa-long-arrow-alt-right"></i></a></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Portfolio Metrics Section -->
+            
+                            <!-- Optimization Button Section -->
+                            <div class="row justify-content-center">
+                                <div class="col-lg-6">
+                                    <div class="card">
+                                        <div class="card-body text-center">
+                                            <button id="optimizeButton" class="btn btn-primary">Optimize Portfolio</button>
+                                            <div id="optimizationResult" class="mt-3"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Optimization Button Section -->
+            
+                            <!-- Optimization Results Section -->
+                            <div class="row justify-content-center mt-4" id="optimizationResultsSection" style="display: none;">
+                                <div class="col-lg-12">
+                                    <div class="row">
+                                        <div class="col-lg-6 mb-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Optimization Result</h5>
+                                                    <div id="OptimizationChart"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6 mb-4">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">Optimization Performance</h5>
+                                                    <div id="optimizationPerformance"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Optimized Allocation</h5>
+                                    <div id="optimizedAllocation">
+                                        <table class="table table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>Symbol</th>
+                                                    <th>Action</th>
+                                                    <th>Update to Portfolio</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="allocationTableBody">
+                                                <!-- Dynamically generated table rows will go here -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End Optimization Results Section -->
+            
+                            <footer class="footer">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <script>document.write(new Date().getFullYear())</script> © All Rights Reserved
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="text-sm-right d-none d-sm-block">
+                                                Crafted with <i class="fas fa-heart"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Include Bootstrap JS and Font Awesome JS -->
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+            
+            <!-- JavaScript for handling the optimization and updates -->
+            <script>
+                function updateOptimizedAllocation(data) {
+                    const allocationTableBody = document.getElementById('allocationTableBody');
+                    
+                    // Clear previous content if any
+                    allocationTableBody.innerHTML = '';
+                    
+                    // Iterate over each stock allocation and create a table row
+                    Object.keys(data).forEach(symbol => {
+                        const allocation = data[symbol];
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${symbol}</td>
+                            <td>${allocation}</td>
+                            <td><button class="btn btn-primary add-to-portfolio" data-symbol="${symbol}">Update</button></td>
+                        `;
+                        allocationTableBody.appendChild(row);
+                    });
+                    
+                    // Attach event listeners to Add to Portfolio buttons
+                    document.querySelectorAll('.add-to-portfolio').forEach(button => {
+                        button.addEventListener('click', addToPortfolio);
+                    });
+                }
+            
+                function addToPortfolio(event) {
+                    const symbol = event.target.dataset.symbol;
+                            console.log(symbol)
+                }
+            
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = cookies[i].trim();
+                            if (cookie.startsWith(name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+            
+                document.addEventListener('DOMContentLoaded', getPortfolioInsights);
+            
+                function getPortfolioInsights() {
+                    fetch("{% url 'get-portfolio-insights' %}", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        document.getElementById('user-risk-profile').innerText = data.RiskProfile || 'N/A';
+                        document.getElementById('current-stock-holdings').innerText = data.CurrentStockHoldings || 'N/A';
+            
+                        document.getElementById('portfolio-beta').innerText = data.PortfolioBeta || 'N/A';
+                        document.getElementById('portfolio-beta-text').innerText = `Your portfolio moves by a factor of ${data.PortfolioBeta} in the direction of market swing`;
+                        document.getElementById('portfolio-pe').innerText = data.PortfolioPE || 'N/A';
+                    })
+                    .catch(error => {
+                        console.error('Error fetching portfolio insights:', error);
+                        alert('Failed to fetch portfolio insights. Please try again later.');
+                    });
+                }
+            
+                document.getElementById('optimizeButton').addEventListener('click', optimizePortfolio);
+            
+                function optimizePortfolio() {
+                    fetch("{% url 'optimize_portfolio' %}", {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": "{{ csrf_token }}"
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        updateOptimizationResults(data);
+                    })
+                    .catch(error => {
+                        console.error('Error optimizing portfolio:', error);
+                        alert('Failed to optimize portfolio. Please try again later.');
+                    });
+                }
+            
+                function updateOptimizationResults(data) {
+                    document.getElementById('optimizationResultsSection').style.display = 'block';
+                    updateOptimizedAllocation(data.allocations);
+                    renderWeightChart(data.weights);
+            
+                    document.getElementById('optimizationPerformance').innerHTML = `
+                        <h6>Optimized Weights</h6>
+                        <pre>${JSON.stringify(data.performance["MVO"], null, 2)}</pre>
+                    `;
+                }
+            
+                function renderWeightChart(weights) {
+                    const labels = Object.keys(weights);
+                    const series = Object.values(weights);
+            
+                    new ApexCharts(document.querySelector("#OptimizationChart"), {
+                        series: series,
+                        chart: {
+                            type: 'donut',
+                            height: 350,
+                        },
+                        labels: labels,
+                        responsive: [{
+                            breakpoint: 480,
+                            options: {
+                                chart: {
+                                    width: 200
+                                },
+                                legend: {
+                                    position: 'bottom'
+                                }
+                            }
+                        }]
+                    }).render();
+                }
+            </script>
+            <!-- Recommendations -->
+            <div id="recommendations" class="tabcontent">
+                <div class="main-content">
+                    <div class="page-content">
+                        <div class="container-fluid">
+                            <!-- start page title -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                                        <h4 class="mb-0">Dashboard</h4>
+
+                                        <div class="page-title-right">
+                                            <ol class="breadcrumb m-0">
+                                                <li class="breadcrumb-item"><a href="javascript: void(0);">Minible</a></li>
+                                                <li class="breadcrumb-item">Dashboard</li>
+                                                <li class="breadcrumb-item active">Recommendations</li>
+                                            </ol>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end page title -->
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title mb-4">Short-Term Recommendations</h4>
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap mb-0">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Company Name</th>
+                                                            <th>Last Trading Price (LTP)</th>
+                                                            <th>Entry</th>
+                                                            <th>Target</th>
+                                                            <th>Stop Loss</th>
+                                                            <th>Call</th>
+                                                            <th>Details</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-body font-weight-bold">Discovery Communications INC. (DISCA)</td>
+                                                            <td>$ 41.81</td>
+                                                            <td>$ 42.10</td>
+                                                            <td>$ 53.40</td>
+                                                            <td>$ 39.50</td>
+                                                            <td class="font-weight-bold" style="color:#34c38f;">Buy</td>
+                                                            <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-body font-weight-bold">FISERV INC. (FISV)</td>
+                                                            <td>$ 126.96</td>
+                                                            <td>$ 128.00</td>
+                                                            <td>$ 143.30</td>
+                                                            <td>$ 110.50</td>
+                                                            <td class="font-weight-bold" style="color:#34c38f;">Buy</td>
+                                                            <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-body font-weight-bold">Devon Energy Corporation (DVN)</td>
+                                                            <td>$ 22.04</td>
+                                                            <td>$ 22.10</td>
+                                                            <td>$ 25.61</td>
+                                                            <td>$ 21.30</td>
+                                                            <td class="font-weight-bold" style="color:#34c38f;">Buy</td>
+                                                            <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- end table-responsive -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title mb-4">Mid-Term Recommendations</h4>
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap mb-0">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Stock 1</th>
+                                                            <th>Stock 2</th>
+                                                            <th>Stock 3</th>
+                                                            <th>Target</th>
+                                                            <th>Holding Period</th>
+                                                            <th>Details</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        {% for item in recommendation  %}
+                                                        <tr>
+                                                            <td class="text-body font-weight-bold">{{item.stock_1}}</td>
+                                                            <td class="text-body font-weight-bold" >{{item.stock_2}}</td>
+                                                            <td class="text-body font-weight-bold" >{{item.stock_3}}</td>
+                                                            <td>$ 98.50</td>
+                                                            <td>~ 1 year</td>
+                                                            <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- end table-responsive -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h4 class="card-title mb-4">Long-Term Recommendations</h4>
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-nowrap mb-0">
+                                                    <thead class="thead-light">
+                                                        <tr>
+                                                            <th>Company Name</th>
+                                                            <th>Last Trading Price (LTP)</th>
+                                                            <th>Fundamental Strength</th>
+                                                            <th>Expected Returns (CAGR)</th>
+                                                            <th>Holding Period</th>
+                                                            <th>Details</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td class="text-body font-weight-bold">Molina Healthcare INC. (MOL)</td>
+                                                            <td>$ 240.98</td>
+                                                            <td class="font-weight-bold">Strong</td>
+                                                            <td class="font-weight-bold" style="color:#34c38f;">+ 12.29 %</td>
+                                                            <td>~ 4 years</td>
+                                                            <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-body font-weight-bold">Public Storage (PSA)</td>
+                                                            <td>$ 257.88</td>
+                                                            <td class="font-weight-bold">Good</td>
+                                                            <td class="font-weight-bold" style="color:#34c38f;">+ 11.23 %</td>
+                                                            <td>~ 5 years</td>
+                                                            <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td class="text-body font-weight-bold">Best Buy Co. (BBY)</td>
+                                                            <td>$ 112.48</td>
+                                                            <td class="font-weight-bold">Very Strong</td>
+                                                            <td class="font-weight-bold" style="color:#34c38f;">+ 19.96 %</td>
+                                                            <td>~ 3 years</td>
+                                                            <td>
+                                                                <!-- Button trigger modal -->
+                                                                <button type="button" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light">
+                                                                    View Details
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <!-- end table-responsive -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+
+                            <footer class="footer">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <script>document.write(new Date().getFullYear())</script> © All Rights Reserved
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="text-sm-right d-none d-sm-block">
+                                                Crafted with <i class="fas fa-heart"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- News -->
+            <div id="news" class="tabcontent">
+                <div class="main-content">
+                    <div class="page-content">
+                        <div class="container-fluid">
+                            <!-- start page title -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                                        <h4 class="mb-0">Dashboard</h4>
+
+                                        <div class="page-title-right">
+                                            <ol class="breadcrumb m-0">
+                                                <li class="breadcrumb-item"><a href="javascript: void(0);">Home</a></li>
+                                                <li class="breadcrumb-item">Dashboard</li>
+                                                <li class="breadcrumb-item active">Top News</li>
+                                            </ol>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end page title -->
+
+                            {% for n1, n2 in news %}
+                                <div class="row">
+                                    <div class="col-md-6 col-sm-12 d-flex align-items-stretch">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title mb-2">{{ n1.0 }}</h4>
+                                                <p>{{ n1.1 }}</p>
+                                                <a href="{{ n1.2 }}">Read More &nbsp;<i class="fas fa-long-arrow-alt-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 d-flex align-items-stretch">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h4 class="card-title mb-2">{{ n2.0 }}</h4>
+                                                <p>{{ n2.1 }}</p>
+                                                <a href="{{ n2.2 }}">Read More &nbsp;<i class="fas fa-long-arrow-alt-right"></i></a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+
+                            <footer class="footer">
+                                <div class="container-fluid">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <script>document.write(new Date().getFullYear())</script> © All Rights Reserved
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="text-sm-right d-none d-sm-block">
+                                                Crafted with <i class="fas fa-heart"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </footer>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Backtesting -->
+            <div id="prediction" class="tabcontent">
+                <div class="main-content">
+                    <div class="page-content">
+                        <div class="container-fluid">
+                            <!-- Start page title -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="page-title-box d-flex align-items-center justify-content-between">
+                                        <h4 class="mb-0">Stock Price Prediction</h4>
+                                        <div class="page-title-right">
+                                            <ol class="breadcrumb m-0">
+                                                <li class="breadcrumb-item"><a href="javascript:void(0);">Home</a></li>
+                                                <li class="breadcrumb-item">Dashboard</li>
+                                                <li class="breadcrumb-item active">Prediction</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- End page title -->
+            
+                            <!-- Prediction form -->
+                            <div class="row mt-3">
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label for="stock-symbol">Stock Symbol</label>
+                                        <input type="text" class="form-control" id="stock-symbol" placeholder="Enter Stock Symbol">
+                                        
+                                    </div>
+                                </div>
+                                <div class="col-lg-3">
+                                    <div class="form-group">
+                                        <label for="prediction-period">Prediction Period (Days)</label>
+                                        <input type="number" class="form-control" id="prediction-period" value="7">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <button class="btn btn-primary btn-block" onclick="predictStockPrice()">Predict</button>
+                                </div>
+                            </div>
+                            <div id="loader" style="display:none;">
+                                <div class="spinner"></div>
+                            </div>
+                            <!-- Prediction result chart -->
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <!-- Market Chart -->
+                                    <canvas id="marketChart" width="400" height="200"></canvas>
+                                </div>
+                                <div class="col-md-4">
+                                    <!-- Current Market Status -->
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Current Market Status</h5>
+                                            <p class="card-text" id="open-price"></p>
+                                            <p class="card-text" id="close-price"></p>
+                                            <p class="card-text" id="high-price"></p>
+                                            <p class="card-text" id="low-price"></p>
+                                        </div>
+                                    </div>
+                                    <!-- Predicted Market Status -->
+                                    <div class="card mt-3">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Tomorrows Predicted Market price</h5>
+                                            <p class="card-text" id="predicted-price">Predicted Price: $XXX.XX</p>
+                                            <p class="card-text" id="lstm-price">LSTM Predicted Price: $XXX.XX</p>
+                                            <p class="card-text" id="arima-price">ARIMA Predicted Price: $XXX.XX</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div> <!-- end container-fluid -->
+                    </div> <!-- end page-content -->
+                </div> <!-- end main-content -->
+            </div>
+
+         
+
+
+            <script>
+            function predictStockPrice() {
+                var stockSymbol = document.getElementById("stock-symbol").value;
+                var predictionPeriod = document.getElementById("prediction-period").value
+                // Make AJAX request to predict endpoint
+                
+                var xhr = new XMLHttpRequest();
+                xhr.open("POST", "/predict", true);
+                xhr.setRequestHeader("Content-Type", "application/json");
+                xhr.setRequestHeader("X-CSRFToken", getCSRFToken());  // Ensure CSRF token is included
+                xhr.onreadystatechange = function () {
+                    if (xhr.readyState === 4 && xhr.status === 200) {
+                        var response = JSON.parse(xhr.responseText);
+                        $('#loader').hide();
+                        // Extract actual closing prices and dates
+                        var actualData = response.actual_data.map(price => parseFloat(price).toFixed(2));
+                        var actualDates = response.actual_dates;
+
+                        // Extract forecasted prices and dates
+                        var predictedData = response.forecast_set.map(price => parseFloat(price).toFixed(2));
+                        var forecastDates = response.forecast_dates;
+
+                        // Combine actual dates and forecast dates
+                        var allDates = actualDates.concat(forecastDates);
+
+                        // Fill the gap by setting the last actual price as the first predicted one
+                        predictedData[0] = actualData[actualData.length - 1];
+
+                        // Combine actual data and predicted data
+                        var fullActualData = actualData.concat(new Array(predictedData.length - 1).fill(null));
+                        var fullPredictedData = new Array(actualData.length - 1).fill(null).concat(predictedData);
+
+                        // Display current market status
+                        var openPrice = parseFloat(response.today_stock[0].Open).toFixed(2);
+                        var closePrice = parseFloat(response.today_stock[0].Close).toFixed(2);
+                        var highPrice = parseFloat(response.today_stock[0].High).toFixed(2);
+                        var lowPrice = parseFloat(response.today_stock[0].Low).toFixed(2);
+                        var predictedPrice = parseFloat(response.prediction).toFixed(2);
+                        var arimaPrediction = response.arima_pred
+                        var lstmPrediction = response.lstm_pred
+
+
+                        document.getElementById("open-price").textContent = "Open: $" + openPrice;
+                        document.getElementById("close-price").textContent = "Close: $" + closePrice;
+                        document.getElementById("high-price").textContent = "High: $" + highPrice;
+                        document.getElementById("low-price").textContent = "Low: $" + lowPrice;
+                        document.getElementById("predicted-price").textContent = "Predicted Price: $" + predictedPrice;
+                        document.getElementById("arima-price").textContent = "ARIMA Predicted Price: $" + arimaPrediction;
+                        document.getElementById("lstm-price").textContent = "LSTM Predicted Price: $" + lstmPrediction;
+
+
+                        // Update the market chart
+                        updateMarketChart(allDates, fullActualData, fullPredictedData);
+                    }
+                };
+                var data = JSON.stringify({ "ticker": stockSymbol , "predictionperiod": parseInt(predictionPeriod) });
+                xhr.send(data);
+                $('#loader').show();
+            }
+
+            function updateMarketChart(dates, actualData, predictedData) {
+                var ctx = document.getElementById('marketChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Actual Price',
+                            data: actualData,
+                            borderColor: 'blue',
+                            backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                            tension: 0.4
+                        }, {
+                            label: 'Predicted Price',
+                            data: predictedData,
+                            borderColor: 'green',
+                            backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            x: {
+                                type: 'time',
+                                time: {
+                                    unit: 'day'
+                                },
+                                title: {
+                                    display: true,
+                                    text: 'Date'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Price (USD)'
+                                },
+                                beginAtZero: false
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top'
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false,
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Helper function to get CSRF token from cookies
+            function getCSRFToken() {
+                let cookieValue = null;
+                const name = 'csrftoken';
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+</script>
+            
+        <!-- END layout-wrapper -->
+
+   
+ 
+        <!-- JAVASCRIPT -->
+        <script src="{% static 'dashboard/libs/jquery/jquery.min.js' %}"></script>
+        <script src="{% static 'dashboard/libs/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+        <script src="{% static 'dashboard/libs/metismenu/metisMenu.min.js' %}"></script>
+        <script src="{% static 'dashboard/libs/simplebar/simplebar.min.js' %}"></script>
+        <script src="{% static 'dashboard/libs/node-waves/waves.min.js' %}"></script>
+        <script src="{% static 'dashboard/libs/waypoints/lib/jquery.waypoints.min.js' %}"></script>
+        <script src="{% static 'dashboard/libs/jquery.counterup/jquery.counterup.min.js' %}"></script>
+
+        <!-- apexcharts -->
+        <script src="{% static 'dashboard/libs/apexcharts/apexcharts.min.js' %}"></script>
+
+        <script src="{% static 'dashboard/js/pages/dashboard.init.js' %}"></script>
+
+        <script src="{% static 'dashboard/js/app.js' %}"></script>
+
+        <!--  Script for Updating the LTP, PNL and Net Change data in holdings table by fetching data from backend -->
+        <script>
+            function openBacktestingEngine() {
+                $.ajax({
+                    type: "GET",
+                    url: "/backtesting",
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.hasOwnProperty('Error')) {
+                            // alert('Error at backend\n' + "Message: " + data['Error']);
+                        } else {
+                            alert(data);
+                            console.log(data);
+                        }
+                    }
+                });
+            }
+        </script>
+
+        <script>
+            function updateData(data) {
+                stockdata = data["StockData"];
+                currentValue = parseFloat(data["CurrentValue"]).toFixed(2);
+                unrealizedPNL = parseFloat(data["UnrealizedPNL"]).toFixed(2);
+                growth = parseFloat(data["Growth"]).toFixed(2);
+                var tableRows = document.getElementById("portfolio-table").tBodies[0].rows;
+                for (var i = 0; i < tableRows.length; i++) {
+                    var tableData = tableRows[i].getElementsByTagName('td');
+                    tableData[3].innerHTML = "$ " + stockdata[tableRows[i].id]["LastTradingPrice"].toFixed(2);
+                    if (stockdata[tableRows[i].id]["PNL"] > 0) {
+                        tableData[5].style.color = "#34c38f";
+                        tableData[6].style.color = "#34c38f";
+                        tableData[5].innerHTML = "+ $ " + stockdata[tableRows[i].id]["PNL"].toFixed(2);
+                        tableData[6].innerHTML = "+ " + stockdata[tableRows[i].id]["NetChange"].toFixed(2) + " %";
+                    } else {
+                        tableData[5].style.color = "#f46a6a";
+                        tableData[6].style.color = "#f46a6a";
+                        tableData[5].innerHTML = "- $ " + Math.abs(stockdata[tableRows[i].id]["PNL"].toFixed(2));
+                        tableData[6].innerHTML = "- " + Math.abs(stockdata[tableRows[i].id]["NetChange"].toFixed(2)) + " %";
+                    }
+                }
+                var currentValueHeading = document.getElementById("current-value").getElementsByTagName("span")[0];
+                currentValueHeading.innerHTML = currentValue;
+                var unrealizedPNLHeading = document.getElementById("unrealized-pnl");
+                var growthHeading = document.getElementById("growth");
+                
+                if (unrealizedPNL > 0) {
+                    unrealizedPNLHeading.style.color = ":#34c38f";
+                    growthHeading.style.color = ":#34c38f";
+                    unrealizedPNLHeading.getElementsByTagName("span")[0].innerHTML = "+ $ " + Math.abs(unrealizedPNL);
+                    growthHeading.getElementsByTagName("span")[0].innerHTML = "+ " + Math.abs(growth);
+                } else {
+                    unrealizedPNLHeading.style.color = "#f46a6a";
+                    growthHeading.style.color = "#f46a6a";
+                    unrealizedPNLHeading.getElementsByTagName("span")[0].innerHTML = "- $ " + Math.abs(unrealizedPNL);
+                    growthHeading.getElementsByTagName("span")[0].innerHTML = "- " + Math.abs(growth);
+                }
+            }
+
+            function getUpdatedValues() {
+                $.ajax({
+                    type: "GET",
+                    url: "/update-prices",
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.hasOwnProperty('Error')) {
+                            // alert('Error at backend\n' + "Message: " + data['Error']);
+                        } else {
+                            updateData(data);
+                        }
+                    }
+                });
+            }
+
+            getUpdatedValues();
+            var callUpdateFunction = setInterval(getUpdatedValues(), 1000 * 60 * 5); // where X is your every X minutes
+        </script>
+
+        <!-- Script for showing the company's basic financial information once view details button is clicked -->
+        <script>
+            function printFinancials(symbol, data) {
+                var row = document.getElementById("financials-" + symbol);
+                var htmlcontent = `
+                    <div class="col-4">
+                        <table class='table borderless'>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">Sector</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ data['Sector'] }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">Book Value</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['BookValue']).toFixed(2) }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">PE Ratio</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['PERatio']).toFixed(2) }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">PB Ratio</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['PriceToBookRatio']).toFixed(2) }</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-4">
+                        <table class='table borderless'>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">Profit Margin</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['ProfitMargin']).toFixed(2) }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">Operating Margin TTM</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['OperatingMarginTTM']).toFixed(2) }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">Return on Assets TTM</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['ReturnOnAssetsTTM']).toFixed(2) }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">Return on Equity TTM</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['ReturnOnEquityTTM']).toFixed(2) }</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-4">
+                        <table class='table borderless'>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">52 Week Range</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">$ ${ parseFloat(data['52WeekLow']).toFixed(2) } - $ ${ parseFloat(data['52WeekHigh']).toFixed(2) }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">Beta</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['Beta']).toFixed(2) }</td>
+                            </tr>
+                            <tr>
+                                <td style="font-size: 16px; border-top: none;">EV to EBITDA</td>
+                                <td class="font-weight-bold" style="font-size: 16px; border-top: none;">${ parseFloat(data['EVToEBITDA']).toFixed(2) }</td>
+                            </tr>
+                        </table>
+                    </div>
+                `;
+
+                row.innerHTML = htmlcontent;
+            }
+
+            function getFinancials(symbol) {
+                $.ajax({
+                    type: "GET",
+                    url: "/get-financials",
+                    data: {
+                        "symbol": symbol
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.hasOwnProperty('Error')) {
+                            // alert('Error at backend for getFinancials\n' + "Message: " + data['Error']);
+                            var active = false;
+                            var timer = setTimeout(() => { getFinancials(symbol); clearTimeout(timer); }, 1000 * 10 * 1);
+                        } else {
+                            printFinancials(symbol, data["financials"]);
+                        }
+                    }
+                });
+            }
+        </script>
+
+        <!-- Script for submitting the form with AJAX -->
+        <script>
+            function addStockHoldingResult(data) {
+                
+                if (data.status === "Success") {
+                    $('#myModal').modal('toggle');
+                    alert("Stock Holding successfully added to your portfolio");
+                    location.reload();
+                    console.log(data.status)
+                } else {
+                    alert("Error adding the stock holding\n" ); // Display the actual response data
+                }
+            }
+
+            $("#add-holding-form").submit(function(e) {
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+                var form = $(this);
+                var url = form.attr('action');
+                var company = $('#company').val(); // Get the selected company value
+                // Append the company value to the form data
+                var formData = form.serializeArray();
+                formData.push({ name: 'company', value: company });
+                $.ajax({
+                    type: "POST",
+                    url: url,
+                    data: formData, // Use the updated form data
+                    success: function(data) { addStockHoldingResult(data) }
+                });
+            });
+        </script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+
+        <!-- Script for getting the list of companies for showing it in the add new holding dropdown -->
+        <!-- This will be called only once -->
+        <script>
+            $(document).ready(function() {
+                $('#company').select2({
+                    ajax: {
+                        url: '/company-list',
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                q: params.term // Send user input as 'q' parameter
+                            };
+                        },
+                        processResults: function(data) {
+                            return {
+                                results: $.map(data.data, function(item) {
+                                    return {
+                                        id: item.id,
+                                        text: item.text
+                                    };
+                                })
+                            };
+                        },
+                        cache: true
+                    },
+                    minimumInputLength: 1
+                }).on('select2:select', function (e) {
+                    var data = e.params.data;
+                    var ticker = data.id; // Extract the ticker from selected data
+                    $('#company').val(ticker); // Set the selected ticker as the input value
+                });
+            });
+        </script>
+        <!-- Script for getting the date value -->
+        <script>
+            function getDate() {
+                var today = new Date();
+                var dd = today.getDate();
+                var mm = today.getMonth()+1; //January is 0!
+                var yyyy = today.getFullYear();
+
+                if(dd<10) {
+                    dd = '0'+dd
+                } 
+
+                if(mm<10) {
+                    mm = '0'+mm
+                } 
+
+                today = yyyy + '-' + mm + '-' + dd;
+                document.getElementById("example-date-input").value = today;
+                document.getElementById("example-date-input").max = today;
+            }
+
+            $(document).ready( function () {
+                getDate();
+            });
+        </script>
+
+        <!-- Script for working of navbar options -->
+        <script>
+            function getPortfolioInsights() {
+                $.ajax({
+                    type: "GET",
+                    url: "/get-portfolio-insights",
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.hasOwnProperty('Error')) {
+                            // alert('Error at backend\n' + "Message: " + data['Error']);
+                            getPortfolioInsights();
+                        } else {
+                            var betaElement = document.getElementById("portfolio-beta");
+                            var betaElementTxt = document.getElementById("portfolio-beta-text");
+                            betaElement.innerHTML = parseFloat(data["PortfolioBeta"]).toFixed(2);
+                            betaElementTxt.innerHTML = `Your portfolio moves by a factor of ${ parseFloat(data["PortfolioBeta"]).toFixed(2) } in the direction of market swing`;
+                            var peElement = document.getElementById("portfolio-pe");
+                            peElement.innerHTML = parseFloat(data["PortfolioPE"]).toFixed(2);
+                        }
+                    }
+                });
+            }
+
+            function openTab(evt, tabName) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+                // Get all elements with class="tabcontent" and hide them
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+                // Get all elements with class="tablinks" and remove the class "active"
+                tablinks = document.getElementsByClassName("nav-link");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(tabName).style.display = "block";
+                evt.currentTarget.className += " active";
+
+                if (tabName === "portfolio-insights") {
+                    getPortfolioInsights();
+                }
+            }
+            document.getElementById("defaultOpen").click();
+        </script>
+
+        <!-- Donut Charts -->
+        <script>
+            function generateRandomColors(length) {
+                var colors = [];
+                for (let i = 0; i < length; i++) {
+                    var randomColor = Math.floor(Math.random()*16777215).toString(16);
+                    colors.push("#" + randomColor);
+                }
+                return colors;
+            }
+
+            var accounts = {
+                'data': [100],
+                'labels': ['equity']
+            };
+
+            var sectorsdata = {{ sectors.0 }};
+            var sectorslabels = JSON.parse('{{ sectors.1 }}'.replace(new RegExp("&"+"#"+"x27;", "g"), '"'));
+            var sectors = {
+                'data': sectorsdata,
+                'labels': sectorslabels
+            };
+
+            var stocksdata = {{ stocks.0 }};
+            var stockslabels = JSON.parse('{{ stocks.1 }}'.replace(new RegExp("&"+"#"+"x27;", "g"), '"'));
+            var stocks = {
+                'data': stocksdata,
+                'labels': stockslabels
+            };
+
+            var accountChartConfig = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: accounts['data'],
+                        backgroundColor: generateRandomColors(accounts['data'].length),
+                    }],
+                    // These labels appear in the legend and in the tooltips when hovering different arcs
+                    labels: accounts['labels']
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                    position: 'right',
+                    },
+                    animation: {
+                    animateScale: true,
+                    animateRotate: true
+                    }
+                }
+            };
+            var sectorChartConfig = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: sectors['data'],
+                        backgroundColor: generateRandomColors(sectors['data'].length),
+                    }],
+                    // These labels appear in the legend and in the tooltips when hovering different arcs
+                    labels: sectors['labels']
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                    position: 'right',
+                    },
+                    animation: {
+                    animateScale: true,
+                    animateRotate: true
+                    }
+                }
+            };
+            var stockChartConfig = {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: stocks['data'],
+                        backgroundColor: generateRandomColors(stocks['data'].length),
+                    }],
+                    // These labels appear in the legend and in the tooltips when hovering different arcs
+                    labels: stocks['labels']
+                },
+                options: {
+                    responsive: true,
+                    legend: {
+                    position: 'right',
+                    },
+                    animation: {
+                    animateScale: true,
+                    animateRotate: true
+                    }
+                }
+            };
+            window.onload = function() {
+                var ctx1 = document.getElementById('account-chart-container').getContext('2d');
+                window.myDoughnut1 = new Chart(ctx1, accountChartConfig);
+                var ctx2 = document.getElementById('sector-chart-container').getContext('2d');
+                window.myDoughnut2 = new Chart(ctx2, sectorChartConfig);
+                var ctx3 = document.getElementById('stock-chart-container').getContext('2d');
+                window.myDoughnut3 = new Chart(ctx3, stockChartConfig);
+            };
+        </script>
+    </body>
+
+</html>

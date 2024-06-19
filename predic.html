@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Prediction</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .main-content {
+            padding: 20px;
+        }
+        .card-title {
+            font-weight: bold;
+        }
+        .card-text {
+            font-size: 1.2em;
+        }
+        #marketChart {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div id="prediction" class="tabcontent">
+        <div class="main-content">
+            <div class="page-content">
+                <div class="container-fluid">
+                    <!-- Start page title -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="page-title-box d-flex align-items-center justify-content-between">
+                                <h4 class="mb-0">Stock Price Prediction</h4>
+                                <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript:void(0);">Home</a></li>
+                                        <li class="breadcrumb-item">Dashboard</li>
+                                        <li class="breadcrumb-item active">Prediction</li>
+                                    </ol>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End page title -->
+
+                    <!-- Prediction form -->
+                    <div class="row mt-3">
+                        <div class="col-lg-6">
+                            <div class="form-group">
+                                <label for="stock-symbol">Stock Symbol</label>
+                                <input type="text" class="form-control" id="stock-symbol" placeholder="Enter Stock Symbol">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <label for="prediction-period">Prediction Period (Days)</label>
+                                <input type="number" class="form-control" id="prediction-period" value="30">
+                            </div>
+                        </div>
+                        <div class="col-lg-3">
+                            <div class="form-group">
+                                <button class="btn btn-primary btn-block" onclick="predictStockPrice()">Predict</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prediction result chart -->
+                    <div class="row">
+                        <div class="col-md-8">
+                            <!-- Market Chart -->
+                            <canvas id="marketChart" width="400" height="200"></canvas>
+                        </div>
+                        <div class="col-md-4">
+                            <!-- Current Market Status -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">Current Market Status</h5>
+                                    <p class="card-text" id="open-price">Open: $XXX.XX</p>
+                                    <p class="card-text" id="close-price">Close: $XXX.XX</p>
+                                    <p class="card-text" id="high-price">High: $XXX.XX</p>
+                                    <p class="card-text" id="low-price">Low: $XXX.XX</p>
+                                </div>
+                            </div>
+                            <!-- Predicted Market Status -->
+                            <div class="card mt-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">Predicted Market Status</h5>
+                                    <p class="card-text" id="predicted-price">Predicted Price: $XXX.XX</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div> <!-- end container-fluid -->
+            </div> <!-- end page-content -->
+        </div> <!-- end main-content -->
+    </div>
+
+    <script>
+        function updateMarketChart(actualData, predictedData) {
+            var ctx = document.getElementById('marketChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5'], // Replace with actual time series data
+                    datasets: [{
+                        label: 'Actual Price',
+                        data: actualData,
+                        borderColor: 'blue',
+                        backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Predicted Price',
+                        data: predictedData,
+                        borderColor: 'green',
+                        backgroundColor: 'rgba(0, 255, 0, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            type: 'time',
+                            time: {
+                                unit: 'day'
+                            },
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Price (USD)'
+                            },
+                            beginAtZero: false
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                        }
+                    }
+                }
+            });
+        }
+
+        function predictStockPrice() {
+            var stockSymbol = document.getElementById("stock-symbol").value;
+            var predictionPeriod = document.getElementById("prediction-period").value;
+
+            // Make AJAX request to predict endpoint
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/predict", true);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");  // Ensure CSRF token is included
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    // Display current market status
+                    document.getElementById("open-price").textContent = "Open: $" + response.todays_stock.open;
+                    document.getElementById("close-price").textContent = "Close: $" + response.todays_stock.close;
+                    document.getElementById("high-price").textContent = "High: $" + response.todays_stock.high;
+                    document.getElementById("low-price").textContent = "Low: $" + response.todays_stock.low;
+                    // Display predicted market status
+                    document.getElementById("predicted-price").textContent = "Predicted Price: $" + response.prediction;
+                    // Update the market chart
+                    updateMarketChart(response.actual_data, response.predicted_data);
+                }
+            };
+            var data = JSON.stringify({ "ticker": stockSymbol, "period": predictionPeriod });
+            xhr.send(data);
+        }
+    </script>
+</body>
+</html>
